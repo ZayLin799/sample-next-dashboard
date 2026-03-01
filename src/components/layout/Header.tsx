@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import useAxiosAuth from "@/service/useApiService";
 import { useCurrentUser } from "@/utils/hooks/useCurrentUser";
 import { useRouter } from "next/navigation";
-import { Search, Bell, Menu, User, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { Search, Bell, Menu, User, Settings as SettingsIcon, LogOut, ChevronDown } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -84,7 +84,7 @@ export default function Header() {
                             <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shadow-sm">
                                 <img src={`https://i.pravatar.cc/150?u=${name}`} alt="Profile" className="w-full h-full object-cover rounded-full" />
                             </div>
-                            <span className="font-bold text-[13px] text-[#0B1536] hidden sm:block">{name} <span className="text-gray-400 ml-1">v</span></span>
+                            <span className="font-bold text-[13px] text-[#0B1536] hidden sm:flex items-center">{name} <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-1" strokeWidth={3} /></span>
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56 p-1.5 rounded-xl border-slate-200 shadow-xl mt-2 bg-white">
