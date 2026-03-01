@@ -3,26 +3,40 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { PieChart, Users, MapPin, Grid, ShieldPlus, FileText, LogOut, Plus } from "lucide-react";
+import { PieChart, Users, MapPin, Grid, ShieldPlus, FileText, LogOut, Plus, Megaphone } from "lucide-react";
 import useConfirmDialogStore from "@/store/ConfirmationBoxStore";
 import useAxiosAuth from "@/service/useApiService";
 import { useQueryClient } from "@tanstack/react-query";
-
-const navItems = [
-  { label: "Overview", href: "/dashboard", icon: PieChart },
-  { label: "Admins", href: "/dashboard/admins", icon: ShieldPlus },
-  { label: "Users", href: "/dashboard/users", icon: Users },
-  { label: "Regions", href: "/dashboard/regions", icon: MapPin },
-  { label: "Departments", href: "/dashboard/departments", icon: Grid },
-  { label: "Logs", href: "/dashboard/logs", icon: FileText },
-];
+import { useCurrentUser } from "@/utils/hooks/useCurrentUser";
 
 export default function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const { ApiReq } = useAxiosAuth();
   const router = useRouter();
+  const { data: currentUser } = useCurrentUser();
   const { openConfirmDialog } = useConfirmDialogStore();
+
+  const userRole = currentUser?.data?.role?.name;
+
+  const navItems = [
+    { label: "Overview", href: "/dashboard", icon: PieChart },
+    { label: "Regions", href: "/dashboard/regions", icon: MapPin },
+    { label: "Departments", href: "/dashboard/departments", icon: Grid },
+    { label: "Logs", href: "/dashboard/logs", icon: FileText },
+  ];
+
+  if (userRole === "root" || userRole === "developer") {
+    navItems.splice(1, 0, { label: "System Admins", href: "/dashboard/admins", icon: ShieldPlus });
+  }
+
+  if (userRole === "admin" || userRole === "developer") {
+    navItems.splice(2, 0, { label: "Users", href: "/dashboard/users", icon: Users });
+  }
+
+  if (userRole === "developer") {
+    navItems.push({ label: "Announcements", href: "/dashboard/announcements", icon: Megaphone });
+  }
 
   const normalize = (p?: string) => (p ? p.replace(/\/+$/, "") : "");
   const isActive = (href?: string) => {
